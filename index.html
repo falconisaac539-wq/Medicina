@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Centro Médico Salud+</title>
+<style>
+  :root{
+    --verde:#0f9d8a;
+    --verde-osc:#0a5f69;
+    --azul:#1d6fb8;
+    --claro:#eef8f7;
+    --texto:#17323a;
+    --borde:#cfe7e4;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    display:flex;
+    min-height:100vh;
+    font-family:'Segoe UI',Arial,sans-serif;
+    color:var(--texto);
+    background:var(--claro);
+  }
+
+  /* ---------- MENÚ VERTICAL ---------- */
+  .menu{
+    width:270px;
+    flex-shrink:0;
+    display:flex;
+    flex-direction:column;
+    gap:22px;
+    padding:24px 16px;
+    color:#fff;
+    background:linear-gradient(180deg,var(--verde-osc),var(--verde));
+    box-shadow:3px 0 14px rgba(10,95,105,.25);
+  }
+  .logo{display:flex;align-items:center;gap:12px;font-weight:700;font-size:1.1rem;line-height:1.2}
+  .logo .cruz{
+    width:42px;height:42px;border-radius:12px;
+    display:grid;place-items:center;
+    font-size:1.5rem;
+    background:#fff;
+  }
+  .menu ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+  .menu button{
+    width:100%;
+    text-align:left;
+    padding:13px 14px;
+    font:inherit;
+    font-size:.95rem;
+    color:#fff;
+    cursor:pointer;
+    background:transparent;
+    border:1px solid rgba(255,255,255,.35);
+    border-radius:10px;
+    transition:background .2s,transform .2s;
+  }
+  .menu button small{display:block;margin-top:3px;font-size:.72rem;opacity:.8}
+  .menu button:hover{background:rgba(255,255,255,.15);transform:translateX(3px)}
+  .menu button:focus-visible{outline:2px solid #fff;outline-offset:2px}
+  .menu button.activo{background:#fff;color:var(--verde-osc);font-weight:600;border-color:#fff}
+  .pie{margin-top:auto;font-size:.75rem;text-align:center;opacity:.8}
+
+  /* ---------- CONTENIDO ---------- */
+  main{flex:1;min-width:0;padding:34px 36px}
+  section{display:none;max-width:760px}
+  section.visible{display:block}
+  h1{font-size:1.9rem;color:var(--verde-osc);margin-bottom:6px}
+  h2{font-size:1.5rem;color:var(--verde-osc);margin-bottom:4px}
+  .etiqueta{font-size:.8rem;font-weight:600;letter-spacing:1px;color:var(--azul);margin-bottom:16px;text-transform:uppercase}
+  p{line-height:1.55}
+  .tarjeta{
+    margin-top:18px;
+    padding:22px;
+    background:#fff;
+    border:1px solid var(--borde);
+    border-radius:14px;
+    box-shadow:0 4px 14px rgba(15,157,138,.1);
+  }
+  .tarjetas{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:20px}
+  .tarjetas .tarjeta{margin-top:0}
+  .tarjeta h3{color:var(--verde);margin-bottom:6px;font-size:1.05rem}
+
+  form{display:flex;flex-wrap:wrap;gap:14px;align-items:flex-end}
+  label{display:flex;flex-direction:column;gap:6px;font-size:.9rem;font-weight:600}
+  input{
+    width:170px;
+    padding:10px 12px;
+    font:inherit;
+    border:1.5px solid var(--borde);
+    border-radius:8px;
+  }
+  input:focus{outline:none;border-color:var(--verde);box-shadow:0 0 0 3px rgba(15,157,138,.2)}
+  .calcular{
+    padding:11px 22px;
+    font:inherit;
+    font-weight:600;
+    color:#fff;
+    cursor:pointer;
+    background:var(--verde);
+    border:0;
+    border-radius:8px;
+    transition:background .2s;
+  }
+  .calcular:hover{background:var(--verde-osc)}
+  .resultado{
+    margin-top:18px;
+    padding:14px 16px;
+    min-height:52px;
+    font-size:1.05rem;
+    background:var(--claro);
+    border-left:5px solid var(--verde);
+    border-radius:8px;
+  }
+  .resultado b{color:var(--verde-osc);font-size:1.25rem}
+  .resultado.error{border-left-color:#d64545;background:#fdeeee}
+  .nota{margin-top:14px;font-size:.85rem;color:#4b6b73}
+
+  table{width:100%;margin-top:16px;border-collapse:collapse;font-size:.9rem}
+  th,td{padding:8px 10px;text-align:left;border-bottom:1px solid var(--borde)}
+  th{color:var(--verde-osc)}
+
+  @media (max-width:760px){
+    body{flex-direction:column}
+    .menu{width:100%;padding:14px;gap:12px}
+    .menu ul{flex-direction:row;flex-wrap:wrap}
+    .menu li{flex:1 1 150px}
+    .pie{display:none}
+    main{padding:22px 16px}
+    input{width:100%}
+    label{flex:1 1 140px}
+  }
+</style>
+</head>
+<body>
+
+<!-- MENÚ VERTICAL -->
+<nav class="menu" aria-label="Menú principal">
+  <div class="logo"><span class="cruz">⚕️</span><span>Centro Médico<br>Salud+</span></div>
+  <ul>
+    <li><button type="button" class="activo" data-seccion="inicio">🏥 Inicio</button></li>
+    <li><button type="button" data-seccion="area">🔬 Área de una lesión<small>Página 97</small></button></li>
+    <li><button type="button" data-seccion="imc">⚖️ Índice de masa corporal<small>Página 98</small></button></li>
+  </ul>
+  <p class="pie">Funciones que devuelven resultados</p>
+</nav>
+
+<main>
+
+  <!-- INICIO -->
+  <section id="inicio" class="visible">
+    <h1>Bienvenido al Centro Médico Salud+</h1>
+    <p>La medicina es la ciencia que estudia la salud, previene las enfermedades y busca curarlas. Los médicos usan mediciones y cálculos todos los días para tomar buenas decisiones. Aquí tienes dos herramientas sencillas que lo muestran.</p>
+    <div class="tarjetas">
+      <div class="tarjeta">
+        <h3>🔬 Área de una lesión</h3>
+        <p>Los médicos miden heridas y manchas en la piel para ver si se curan. Si la lesión es redonda, su tamaño se calcula con el área de un círculo.</p>
+      </div>
+      <div class="tarjeta">
+        <h3>⚖️ Índice de masa corporal</h3>
+        <p>El IMC relaciona el peso con la estatura y ayuda a saber si una persona está en un peso saludable.</p>
+      </div>
+    </div>
+    <p class="nota">Elige un ejercicio en el menú de la izquierda.</p>
+  </section>
+
+  <!-- ÁREA (pág. 97) -->
+  <section id="area">
+    <h2>Área de una lesión circular</h2>
+    <p class="etiqueta">Página 97 · Función que devuelve un resultado</p>
+    <p>Escribe el radio de la lesión (la mitad de su ancho) en centímetros y la función <code>calcularAreaCirculo(radio)</code> te regresa el área.</p>
+    <div class="tarjeta">
+      <form id="formArea">
+        <label>Radio (cm)
+          <input type="text" id="radio" inputmode="decimal" placeholder="Ejemplo: 1.5" autocomplete="off">
+        </label>
+        <button type="submit" class="calcular">Calcular</button>
+      </form>
+      <div class="resultado" id="resArea" aria-live="polite">El resultado aparecerá aquí.</div>
+    </div>
+  </section>
+
+  <!-- IMC (pág. 98) -->
+  <section id="imc">
+    <h2>Índice de masa corporal (IMC)</h2>
+    <p class="etiqueta">Página 98 · Función que devuelve un resultado</p>
+    <p>Escribe tu peso y tu estatura. La función <code>calcularIMC(peso, altura)</code> regresa el IMC y abajo se te dice cuál es tu estado de salud corporal.</p>
+    <div class="tarjeta">
+      <form id="formIMC">
+        <label>Peso (kg)
+          <input type="text" id="peso" inputmode="decimal" placeholder="Ejemplo: 70" autocomplete="off">
+        </label>
+        <label>Estatura (m)
+          <input type="text" id="altura" inputmode="decimal" placeholder="Ejemplo: 1.70" autocomplete="off">
+        </label>
+        <button type="submit" class="calcular">Calcular</button>
+      </form>
+      <div class="resultado" id="resIMC" aria-live="polite">El resultado aparecerá aquí.</div>
+      <table>
+        <tr><th>IMC</th><th>Estado</th></tr>
+        <tr><td>Menos de 18.5</td><td>Bajo peso</td></tr>
+        <tr><td>18.5 a 24.9</td><td>Peso normal</td></tr>
+        <tr><td>25 a 29.9</td><td>Sobrepeso</td></tr>
+        <tr><td>30 a 34.9</td><td>Obesidad moderada</td></tr>
+        <tr><td>35 a 39.9</td><td>Obesidad severa</td></tr>
+        <tr><td>40 o más</td><td>Obesidad muy severa</td></tr>
+      </table>
+      <p class="nota">Es solo una guía. Para un diagnóstico, consulta a un médico.</p>
+    </div>
+  </section>
+
+</main>
+
+<script>
+  // ---------- FUNCIONES QUE DEVUELVEN UN RESULTADO ----------
+  function calcularAreaCirculo(radio) {
+    var area = Math.PI * radio * radio;   // calcula el área del círculo
+    var area2 = area.toFixed(2);          // lo ajusta a 2 decimales
+    return area2;                         // aquí regresa el área ya calculada
+  }
+
+  // Indice de masa corporal (IMC) = peso / altura (al cuadrado)
+  function calcularIMC(peso, altura) {
+    return peso / Math.pow(altura, 2);
+  }
+
+  // ---------- AYUDAS ----------
+  function leerNumero(id) {
+    var texto = document.getElementById(id).value.trim().replace(",", ".");
+    if (texto === "" || isNaN(texto)) { return NaN; }
+    return Number(texto);
+  }
+
+  function mostrar(idCaja, html, esError) {
+    var caja = document.getElementById(idCaja);
+    caja.innerHTML = html;
+    caja.className = esError ? "resultado error" : "resultado";
+  }
+
+  // ---------- ÁREA ----------
+  document.getElementById("formArea").addEventListener("submit", function (ev) {
+    ev.preventDefault();
+    var radio = leerNumero("radio");
+    if (isNaN(radio) || radio <= 0) {
+      mostrar("resArea", "Escribe un radio válido, mayor que 0.", true);
+      return;
+    }
+    var areaCirculo = calcularAreaCirculo(radio);
+    mostrar("resArea", "El área de la lesión es: <b>" + areaCirculo + " cm²</b>");
+  });
+
+  // ---------- IMC ----------
+  document.getElementById("formIMC").addEventListener("submit", function (ev) {
+    ev.preventDefault();
+    var peso = leerNumero("peso");
+    var altura = leerNumero("altura");
+    if (isNaN(peso) || isNaN(altura) || peso <= 0 || altura <= 0) {
+      mostrar("resIMC", "No aplica con ese peso o estatura. Escribe números mayores que 0.", true);
+      return;
+    }
+    if (altura > 3) {
+      mostrar("resIMC", "La estatura va en metros, por ejemplo 1.70.", true);
+      return;
+    }
+
+    var IMC = Number(calcularIMC(peso, altura).toFixed(1));
+    var estado;
+    if (IMC < 18.5)      { estado = "Tienes bajo peso"; }
+    else if (IMC < 25)   { estado = "Tienes un peso normal"; }
+    else if (IMC < 30)   { estado = "Tienes sobrepeso"; }
+    else if (IMC < 35)   { estado = "Tienes obesidad moderada"; }
+    else if (IMC < 40)   { estado = "Tienes obesidad severa"; }
+    else                 { estado = "Tienes obesidad muy severa"; }
+
+    mostrar("resIMC", "El IMC es <b>" + IMC + "</b>. " + estado + ".");
+  });
+
+  // ---------- MENÚ ----------
+  var botones = document.querySelectorAll(".menu button");
+  var secciones = document.querySelectorAll("main section");
+  for (var i = 0; i < botones.length; i++) {
+    botones[i].addEventListener("click", function () {
+      var destino = this.getAttribute("data-seccion");
+      for (var j = 0; j < botones.length; j++) { botones[j].classList.remove("activo"); }
+      for (var k = 0; k < secciones.length; k++) { secciones[k].classList.remove("visible"); }
+      this.classList.add("activo");
+      document.getElementById(destino).classList.add("visible");
+    });
+  }
+</script>
+
+</body>
+</html>
